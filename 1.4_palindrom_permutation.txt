@@ -1,0 +1,118 @@
+
+// Given a string, write a function to check if it is a permutation of a palindrome.
+// A palindrome is a word or phrase that is the same forwards and backwards. A 
+// permutation is a rearrangement of letter. The palindrome does not need to be 
+// limmited to just dictionary words.
+// Example
+// Input:	Tact Coa
+// Output:	True (permutations: "taco cat", "atco cta", etc.)
+
+// --------------------------- my implement in C++ ---------------------------------
+
+// #1, First sort the string. By using a stack, if the juxtaposing words are the 
+// same, pop the stack top, if not, push new word into stack. At last check 
+// remaining words in stack. If more than 1, it's not a permutation of a palindrome.
+// The big O denpends on the sort algorithm. The quickest would be O(NlogN), since the
+// iteration time is O(N), the final big O will be bigger than O(NlogN). 
+// And T(N) is the worst case.
+
+bool checkPOP(const string oriStr) {
+	stack<char> s;
+	string strSort(string str);
+
+	string str = strSort(oriStr);
+
+	for (auto w : str) {
+		if (s.empty()) s.push(w);
+		else {
+			if (s.top() == w) s.pop();
+			else s.push(w);
+		}
+	}
+
+	if (s.size() > 1) return false;
+	else return true;
+}
+
+string strSort(string oriStr) {
+    string newStr;
+    for (auto w : oriStr)
+        if ((w >= 'a' && w <= 'z') || (w >= 'A' && w <= 'Z'))
+        	newStr += tolower(w);
+    sort(newStr.begin(), newStr.end(), [] (char a, char b) { return a < b; });
+
+    return newStr;
+}
+
+
+// --------------------------------- test case --------------------------------------
+
+string1 = "Tack Coa"
+string2 = "Pushhsup"
+string3 = "Hoooola"
+string4 = "abc ccc cba"
+
+// ---------------------------- original solution in Java --------------------------
+
+// #1, Using a hash table to count how many times each character appears.
+// Then iterate through the hash table and ensure the no more than one character
+// has an odd count. O(N), where N is the length of the string.
+
+boolean isPermutationOfPalindrome(String phrase) {
+	int[] table = buildCharFrequencyTable(phrase);
+	return checkMaxOneOdd(table);
+}
+
+boolean checkMaxOneOdd(int[] table) {
+	booleana foundOdd = false;
+	for (int ocunt : table) {
+		if (count % 2 == 1) {
+			if (foundOdd) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+int getCharNumber(Character c) {
+	int a = Character.getNumbericValue('a');
+	int z = Character.getNumbericValue('z');
+	int val = Character.getNumbericValue(c);
+	if (a < val && val <= z) {
+		return val - a;
+	}
+	return -1;
+}
+
+int[] buildCharFrequencyTable(String phrase) {
+	int[] table = new int[Character.getNumbericValue('z') -
+						  Character.getNumbericValue('a') + 1];
+	for (char c : phrase.toCharArray()) {
+		int x = getCharNumber(c);
+		if (x != -1) {
+			table[x]++;
+		}
+	}
+	return table;
+}
+
+// #2 Check odd counts as it go along, it takes less than O(N).
+
+boolean isPermutationOfPalindrome(String phrase) {
+	int countOdd = 0;
+	int[] table = new int[Character.getNumbericValue('z') - 
+						  Character.getNumbericValue('a') + 1];
+	for (char c : phrase.toCharArray()) {
+		int x = getCharNumber(c);
+		if (x != -1) {
+			table[x]++;
+			if (table[x] % 2 == 1) {
+				countOdd++;
+			} else {
+				countOdd--;
+			}
+		}
+	}
+	return countOdd <= 1;
+}
