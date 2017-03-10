@@ -1,0 +1,151 @@
+
+// There are three types of edits that can be performed on strings: insert a
+// character, remove a character, or replace a character. Given two strings, 
+// write a function to check if they are one(or zero edits) away.
+// Example
+// pale,	pale -> true
+// pales,	pale -> true
+// pale,	bale -> true
+// pale,	bake -> false
+
+// ----------------------------- my implement in C++ -------------------------------
+
+// Notice!!!: The solution below is wrong, it works only on the original example. 
+// #1 Since it's just one letter modified, the remaining letter must stay at the same 
+// position. If the number of unmatched letters larger than 2, it definitely does not
+// belong to any of the situations. So the time complexity is O(N).
+
+bool checkOneAway(const string str1, const string str2) {
+	int unmatched = 0;
+	size_t len = str1.length() < str2.length() ? str1.length() : str2.length(); // shorter one
+
+	for (size_t i = 0; i < len; ++i)
+		if (str1[i] != str2[i]) ++unmatched;
+
+	return unmatched < 2;
+}  
+
+// #1 Using a stack like how I use in 1.4. And this time, the strings don't 
+// have to be sorted before. Just make sure that longer string should be put
+// into the stack both first and last.(Cause it's the longer one.)
+
+bool checkOneAway(const string str1, const string str2) {
+	string stStr, lgStr;  // shorter string and longer string
+	stack<char> s;
+
+	// find the shorter and longer string
+	if (str1.length() > str2.length()) {
+		stStr = str2;
+		lgStr = str1;
+	}
+	else {
+		stStr = str1;
+		lgStr = str2;
+	}
+
+	// the match process, the same letter will be popped out,
+	// the different will remain.
+
+	for (auto stIter = stStr.begin(), lgIter = lgStr.begin();
+         lgIter != lgStr.end(); ++stIter, ++lgIter) {
+
+        if (s.empty() || s.top() != *lgIter)
+            s.push(*lgIter);
+        else
+            s.pop();
+
+		if (stIter > stStr.end())
+			continue;
+		else if (s.top() != *stIter)
+			s.push(*stIter);
+		else
+			s.pop();
+	}
+
+	return s.size() < 3;  // the size of stack represent edit status
+						  // 0: 0 edit 1:insert or remove 2:replace
+						  // 3: other situations
+}
+
+
+// -------------------------------- test case --------------------------------------
+
+str1 = "pale"	str2 = "pale"
+str3 = "pales"	str4 = "pale"
+str5 = "pale"	str6 = "bale"
+str7 = "pale"	str8 = "bake"
+str9 = "pale"	str10 = "pasle"
+
+// ------------------------- original solution in Java ---------------------------
+
+// #1 The direct method. 3 situations. It take O(N)
+
+boolean oneEditAway(String first, String second) {
+	if (first.leng() == second.length()) {
+		return oneEditReplace(first, second);
+	} else if (first.length() + 1 == second.length()) {
+		return oneEditInsert(first, second);
+	} else if (first.length() - 1 == second.length()) {
+		return oneEditInsert(second, first);
+	}
+	return false;
+}
+
+boolean oneEditReplace(String s1, String s2) {
+	boolean foundDifference = false;
+	for (int i = 0; i < s1.length(); i++) {
+		if (s1.charAt(i) != s2.charAt(i)) {
+			if (foundDifference) {
+				return false;
+			}
+			foundDifference = true;
+		}
+	}
+	return true;
+}
+
+boolean oneEditInsert(String s1, String s2) {
+	int index1 = 0;
+	int index2 = 0;
+	while (index2 < s2.length() && index1 < s1.length()) {
+		if (s1.charAt(index1) != s2.charAt(index2)) {
+			if (index1 != index2) {
+				return false;
+			}
+			index2++;
+		} else {
+			index1++;
+			index2++;
+		}
+	}
+	return true;
+}
+
+// #2 Just as my first fault thought, but it seperates 
+// different situations. O(N)
+
+boolean oneEditAway(String first, String second) {
+	if (Math.abs(first.length() - second.length()) > 1) {
+		return false;
+	}
+
+	String s1 = first.length() < second.length() ? first : second;
+	String s2 = first.length() < second.length() ? second : first;
+
+	int index1 = 0;
+	int index2 = 0;
+	boolean foundDifferen = false;
+	while (index2 < s2.length() && index1 < s1.length()) {
+		if (s1.charAt(index1) != s2.charAt(index2)) {
+			if (foundDifference) return false;
+
+			if (s1.length() == s2.length()) {
+				index1++;
+			}
+		} else {
+			index1++;
+		}
+		index2++;
+	}
+	return true;
+}
