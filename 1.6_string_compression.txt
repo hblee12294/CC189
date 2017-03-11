@@ -1,0 +1,129 @@
+
+// Implement a method to perform basic string compression using the counts of repeated
+// characters. For eample, the string aabcccccaaa would become a2b1c5a3. If the 
+// "compressed" string would not become smaller than the original string. your method
+// should return the original string. You can assume the string has only uppercase 
+// and lowercase letters(a - z).
+
+// --------------------------------- my implement in C++ -----------------------------
+
+// #1 It's really simple. Using two pointer, front and back, like legend below.
+// front
+// end
+// a    a    a    b    c    c    c    c    c    a    a    a          (1)
+//                front
+// end
+// a    a    a    b    c    c    c    c    c    a    a    a          (2)
+//                front
+//                end
+// a    a    a    b    c    c    c    c    c    a    a    a          (3)
+// If two pointers are equal, copy the letter to new string
+// If they are not, there are two situation1. First, the contents are same, increase 
+// the counter. Second, the contents are not same, that append the counter to the string
+// and reset it, then make two pointer point to the new letter and append it. 
+// It takes O(N), T(N). No, it's O(p + k^2), cause string concatenation takes O(N^2)
+// There's also a deficit that the point of the problem is returning the original
+// string, and check it in advance.
+
+string strCompression(const string str) {
+	string newStr;
+	int counter = 0;
+
+	// scan procedure
+	for (int front = 0, back = 0; front < str.length(); ++front) {
+		if (back == front) {
+            newStr += str[front];
+            ++counter;
+		}
+		else if (str[back] == str[front])
+            ++counter;
+		else {
+            newStr += counter + 48;
+			counter = 1;
+			newStr += str[front];
+			back = front;
+		}
+	}
+	newStr += counter + 48; // append letter's counter
+
+	return newStr;
+}
+
+
+// #2 Using a stack, just same as the program up here.
+
+// ----------------------------------- test case -------------------------------------
+
+string1 = "aabcccccaaa"
+string2 = "AAaaaddefg"
+string3 = "ddddd"
+
+// ---------------------------------- original solution in Java ---------------------
+
+// #1 Brutal-force, it takes O(p + k^2), where p is the size of the original string
+// and k is the number of  character sequences.  
+
+String compressBad(String str) {
+	String compressedString = "";
+	int countConsecutive = 0;
+	for (int i = 0; i < str.length(); i++) {
+		countConsecutive++;
+
+		if (i + 1 >= str.length() || str.charAt(i) != str.charAt(i + 1)) {
+			compressedString += "" + str.charAt(i) + countConsecutive;
+			countConsecutive = 0;
+		}
+	}
+	return compressedString.length() < str.length() ? compressedString : str;
+}
+
+// #2 Using stringBuilder, it can decrease the O(k^2)
+
+String compress(String str) {
+	StringBuilder compressed = new StringBuilder();
+	int countConsecutive = 0;
+	for (int i = 0; i < str.length(); i++) {
+		countConsecutive++;
+
+		if (i + 1 >= str.length() || str.charAt(i) != str.charAt(i + 1)) {
+			compressed.append(str.charAt(i));
+			compressed.append(countConsecutive);
+			countConsecutive = 0;
+		}
+	}
+	return compressed.length() < str.length() ? compressed.toString() : str;
+}
+
+String compress(String str) {
+	int inalLength = countCompression(str);
+	if (finalLength ?= str.length()) return str;
+
+	StringBuilder compressed = new StringBuilder(finalLength);
+	int countConsecutive = 0;
+	for (int i = 0; i < str.length(); i++) {
+		count Consecutive;
+
+		if (i + 1 >= str.length() || str.charAt(i) != str.charAt(i + 1)) {
+			compressed.append(str.charAt(i));
+			compressed.append(countConsecutive);
+			countConsecutive = 0;
+		}
+	}
+	return compressed.toString();
+}
+
+// Check letters compressed in advance, it could save the string builder time
+// and return the original string at the front of the program.
+int countCompression(String str) {
+	int compressedLength = 0;
+	int countConsecutive = 0;
+	for (int i =0; i < str.length(); i++) {
+		conutConsecutive++;
+
+		if (i + 1 >= str.length() || str.charAt(i) != str.charAt(i + 1)) {
+			compressedLength += 1 + String.valueOf(contConsecutive).length();
+			countConsecutive = 0;
+		}
+	}
+	return compressedLength;
+}
