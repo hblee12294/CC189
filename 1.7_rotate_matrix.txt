@@ -19,20 +19,24 @@ vector<vector<int>> rotate(const vector<vector<int>> oriMx, int N) {
 }
 
 // #2 I think I mistaken the question. Maybe I'm not allowed to use extra space and
-// rotate directly. So here's the solution.
+// should rotate directly. So here's another solution. I got some trouble in writting
+// this version, so I imitate the original solution in Java.
 
-vector<vector<int>> rotate(vector<vector<int>> matrix, int N) {
+vector<vector<int>> rotateMx(vector<vector<int>> matrix, int N) {
 	int temp = 0;
-	int layer = double(N)/2 + 0.9;
 
-	for (int i = 0; i < layer; ++i) {
-		int midPoint = double(N - 2*i)/2 + 0.9;
-		for (int j = 0; j < midPoint; ++j) {
-			temp = matrix[i][j];                      // store the top-left
-			matrix[i][j] = matrix[i][N-j-1];          // bottom-left to top-left
-			matrix[i][N-j-1] = matrix[N-j-1][N-i-1];  // bottom-right to bottom-left
-			matrix[N-j-1][N-i-1] = matrix[N-i-1][j];  // top-right to bottom-right
-			matrix[N-i-1][j] = temp;                  // place top-right
+	for (int layer = 0; layer < N/ 2; ++layer) {
+        int first = layer;
+        int last = N - 1 - first;
+
+		for (int p = first; p < last; ++p) {       // p is the pointer iterate the current row.
+            int offset = p - first;
+
+			temp = matrix[first][p];                                 // store the top-left
+			matrix[first][p] = matrix[last-offset][first];           // bottom-left to top-left
+			matrix[last-offset][first] = matrix[last][last-offset];  // bottom-right to bottom-left
+			matrix[last][last-offset] = matrix[p][last];             // top-right to bottom-right
+			matrix[p][last] = temp;                                  // place top-right
 		}
 	}
 
