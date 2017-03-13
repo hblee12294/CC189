@@ -1,0 +1,141 @@
+
+// Write an algorithm such that if an element in an MxN matrix is 0, its entire row
+// and columna are set to 0.
+
+// ------------------------------ my implement in C++ --------------------------------
+
+// #1 The normal method, O(MxN), T(M+N*2). I think it's a little redundency.
+
+vector<vector<int>> setZero(vector<vector<int>> matrix) {
+	int row = matrix.size();
+	int col = matrix[0].size();
+	vector<int> markRow(row, 0);   // a vector which marks row position
+	vector<int> markCol(col, 0);   // a vector which markes coloumn position
+	vector<int> zeroRow(col, 0);   // a vector of N zeros, as a row replacer.
+
+	// mark the position of zero pixel
+	for (int i = 0; i < row; ++i) {
+		for (int j =0; j < col; ++j) {
+			if (matrix[i][j] == 0) {
+				markRow[i] = 1;
+				markCol[j] = 1;
+			}
+		}
+	}
+
+	// set zero process, layer by layer. There're two situations. 
+	for (int layer = 0; layer < row; ++layer) {
+		if (markRow[layer] == 1)        // current row replaced by zeroRow
+			matrix[layer] = zeroRow;
+		else {                          // set marked column to 0 one by one
+			for (int brush = 0; brush < col; ++brush)
+				if (markCol[brush] == 1) matrix[layer][brush] = 0;
+		}
+	}
+	return matrix;
+}
+
+
+// -------------------------------- test case ------------------------------------
+
+matrix1 = {{1,2,3}, {4,0,6}, {7,8,9}}
+matrix2 = {{1,2,3,0}, {5,6,7,8}, {9,10,11,12}, {0,14,15,16}}
+matrix3 = {{5,5,5,5}, {5,5,0,5},{5,5,5,5}}
+
+// ---------------------------- original solution in Java ----------------------------
+
+// #1 Same way as I do.
+
+void setZeros(int[][] matrix) {
+	boolean[] row = new boolean[matrix.length];
+	boolean[] column = new boolean[matrix[0].length];
+
+	// Store the row and colum index with value 0
+	for (int i =0; i < matrix.length; i++) {
+		for (int j = 0; j < matrix[0].length; j++) {
+			if (matrix[i][j] == 0) {
+				row[i] = true;
+				column[j] = true;
+			}
+		}
+	}
+
+	// Nullify rows
+	for (int i =0; i < row.length; i++) {
+		if (row[i]) nullifyRow(matrix, i);
+	}
+
+	// Nullify columns
+	for (int j = 0; j < column.length; j++) {
+		if (colum[j]) nullifyColum(matrix, j);
+	}
+}
+
+void nullifyRow(int[][] matrix, int row) {
+	for (int j = 0; j < matrix[0].length; j++) {
+		matrix[row][j] = 0;
+	}
+}
+
+void nullifyColum(int[][] matrix, int col) {
+	for (int i = 0; i < matrix.length; i++) {
+		matrix[i][col] = 0;
+	}
+}
+
+// #2 Bit vector, it would be T(1) space by using the first row as a replacement for
+// the row array and the first column as a replacement for the column array.
+
+void setZeros(int[][] matrix) {
+	boolean rowHasZero = false;
+	boolean colHasZero = false;
+
+	// Check if first row has a zero
+	for (int j = 0; j < matrix[0].length; j++) {
+		if (matrix[0][j] == 0) {
+			rowHasZero = true;
+			break;
+		}
+	}
+
+	// Check if first column has a zero
+	for (int i = 0; i < matrix.length; i++) {
+		if (matrix[i][0] == 0) {
+			colHasZero = true;
+			break;
+		}
+	}
+
+	// Check for zeros in the rest of the array
+	for (int i =0; i < matrix.length; i++) {
+		for (int j = 0; j < matrix[0].length; j++) {
+			if (matrix[i][j] == 0) {
+				row[i] = true;
+				column[j] = true;
+			}
+		}
+	}
+
+	// Nullify rows
+	for (int i = 1; i < row.length; i++) {
+		if (matrix[i][0] == 0) 
+			nullifyRow(matrix, i);
+	}
+
+	// Nullify columns
+	for (int j = 1; j < column.length; j++) {
+		if (matrix[0][j] == 0) 
+			nullifyColum(matrix, j);
+	}
+
+	// NUllify first row
+	if (rowHasZero) {
+		nullifyRow(matrix, 0);
+	}
+
+	// NUllify first column
+	if (colHasZero) {
+		nullifyRow(matrix, 0);
+	}
+}
+
