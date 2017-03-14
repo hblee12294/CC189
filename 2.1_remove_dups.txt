@@ -1,0 +1,75 @@
+
+// Write code to remove duplicates from an unsorted linked list.
+// Follow up: How would you solve this problem if a temporary buffer is not allowd?
+
+// ------------------------- my implement in C++ ---------------------------------
+
+// #1 Using a buffer to mark appeared items. O(N), T(N). (N = 256 characters).
+
+void removeDups(list<char> &l) {
+	vector<bool> buffer(256, false);
+
+	for (auto iter = l.begin(); iter != l.end(); ++iter) {
+		if (buffer[int(*iter)])
+			l.erase(iter);
+		else
+			buffer[int(*iter)] = true;
+	}
+} 
+
+// #2 Without using a buffer, I can use a use a bit vector.
+
+// #3 Using a char pointer to be a marker which points to the current item,
+// Then iterate it's sublist. O(N*N), T(1).
+
+void removeDups(list<char> &l) {
+	char *marker;
+
+	for (auto iter = l.begin(); iter != l.end(); ++iter) {
+		marker = &(*iter);
+		for (auto iter2 = ++iter; iter2 != l.end(); ++iter2)
+			if (*iter2 == *marker) l.erase(iter2);
+	}
+}
+
+
+// ---------------------------- test case -----------------------------------------
+
+list<char> list1{'a', 'b', 'c', 'd', 'u', 'z', 'c', 'T', 'b'};
+list<char> list2{'d', 'd', 'u', 'y', 'd', '3', '9', '9', '9'}; 
+
+// ---------------------------- original solution in Java ---------------------------
+
+// #1 The normal method, using a hashtable as a buffer.
+
+void deleteDups(LinkedListNode n) {
+	HashSet<Integer> set = new HashSet<Integer>();
+	LinkedListNode previous = null;
+	while (n != null) {
+		if (set.contains(n.data)) {
+			previous.next = n.next;
+		} else {
+			set.add(n.data);
+			previous = n;
+		}
+		n = n.next;
+	}
+}
+
+// #2 Iterate the list with two pointers: current which iterates through the linked
+// list, and runner which checks all subsequent nodes for duplicates.
+
+void deleteDups(LinkedListNode head) {
+	LinkedListNode current = head;
+	while (current != null) {
+		/* Remove all future nodes that have the same value */
+		LinkedListNode runner = current;
+		while (runner.next != null) {
+			if (runner.next.data == current.data) {
+				runner.next = runner.next;
+			}
+		}
+		current = current.next;
+	}
+}
+
