@@ -1,0 +1,109 @@
+
+// Implement an algorithm to find the kth to last element of a singly linked list.
+// PS: 我搞错了题目，应该是找到距离最后一个元素k单位的元素。 并不是找sublist
+
+// --------------------------- my implement in C++ ---------------------------------
+
+// #1 Using STL list, easy and convenient. Using erase(list.begin(), list.begin() + k)
+// can also achieve the same result. O(k), T(N-k), N is the length of the list.
+
+template< typename T>
+list<T> kthToLast(const list<T> &oriList, int k) {
+	list<T> newList(oriList);
+
+	while(k) {
+		newList.pop_front();
+		--k;
+	}
+
+	return newList;
+}
+
+// #2 Set up a counter counts to k, and move the head directly to the current.
+// O(k), T(1). Skip the implement. 
+
+// 更正：三种方法。(1)找到长度len，返回len-k。(2)长度未知，（需要重点记一下，原答案有c++）
+// (3)设置双指针，采用Runner技术。
+
+// ---------------------------------- test case ----------------------------------
+
+list<char> list1{'a', 'b', 'c', 'd', 'e', 'f', 'g'};	k1 = 3;
+list<int> list2{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}; k2 = 5;
+
+// ------------------------------- original solution in Java -----------------------
+
+// #1 If linked list size is known, iterate the list to find this kth element.
+
+// #2 Recursive: 
+// A: Don't return the element
+
+int printKthToLast(LInkedListNode head, int k) {
+	if (head == null) {
+		return 0;
+	}
+	int index = printKthToLast(head.next, k) + 1;
+	if (index == k) {
+		System.out.println(k + "th to last node is " + head.data);
+	}
+	return index;
+}
+
+// B: Use C++
+
+node* nthToLast(node* head, int k, int& i) {
+	if (head == NULL) {
+		return NULL;
+	}
+	node* nd = nthToLast(head->next, k, i);
+	i = i + 1;
+	if (i == k) {
+		return head;
+	}
+	return nd;
+}
+
+node* nthToLast(node* head, int k) {
+	int i = 0;
+	return nthToLast(head, k, i);
+}
+
+// C: Create a Wrapper Class.
+
+class Index {
+	public int value = 0;
+}
+
+LinkedListNode kthToLast(LinkedListNode head, int k) {
+	Index idx = new Indx();
+	return kthToLast(head, k, idx);
+}
+
+LinkedListNode kthToLast(LinkedListNode head int k, Index idx) {
+	idx.value = idx.value + 1;
+	if (idx.value == k) {
+		return head;
+	}
+	return node;
+}
+
+// #3 Iterative. Use two pointers p1 and p2 and move p1 k steps after the p2, which 
+// point to the beginning. When p2 comes to the end, p1 points to the target element.
+
+LinkedListNode nthToLast(LinkedListNode head, int k) {
+	LinkedListNode p1 = head;
+	LinkedListNode p2 = head;
+
+	/* Move p1 k nodes into the list. */
+	for (int i = 0; i < k; i++) {
+		if (p1 == null) return null;
+		p1 = p1.next;
+	}
+
+	/* Move them at the same pace. Ehen p1 hits the end, p2 will be at the right
+	element. */
+	while (p1 != null) {
+		p1 = p1.next;
+		p2 = p2.next;
+	}
+	return p2;
+}
