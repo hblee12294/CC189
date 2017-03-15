@@ -96,7 +96,7 @@ list<int> intToList(int num) {
 	return l;
 }
 
-
+// #2 Imitated original solution using resursion.
 
 // ----------------------------------- test case ------------------------------------
 
