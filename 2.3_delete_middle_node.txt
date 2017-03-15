@@ -1,0 +1,41 @@
+
+// Implement an algorithm to delete a node in the middle (i.e. any node but the first
+// and last node, not necessarily the exact middle) of a singly linked list, given
+// only access to that node. (意思是只能接触到你要删的那个node，)
+// EXAMPLE
+// Input: the node c from the linked list a->b->c->d->e->f
+// Result: nothing is returnd, but the new linked list looks like a->b->d->e->f
+
+// ------------------------------ my implement in C++ -------------------------------
+
+// #1 The only method, using the next node's data replace the current's, and delete
+// the next node. O(1), T(1).
+
+ bool deleteMiddle(node &n) {
+	if (n == null || n.next == null) // cannot be used on the last node, since there's
+		return false;                // no next node.
+
+	n.data = n.next.data;
+	n.next = n.next.next;
+
+	return true;
+}
+
+
+// --------------------------------- test case -----------------------------------
+
+// None
+
+// -------------------------------- original solution in Java -----------------------
+
+// #1 Same as above. So easy.
+
+boolean deleteNode(LinkedListNode n) {
+	if (n == null || n.next == null) { 
+		return false;
+	}
+	LinkedListNode next = n.next;
+	n.data = next.data;
+	n.next = next.next;
+	return true;
+}
