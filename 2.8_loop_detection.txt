@@ -1,0 +1,81 @@
+
+// Given a circular linked list, implement an algorithm that returns the nude at the 
+// beginning of the loop.
+// DEFINITION
+// Circular linked list: A(corrupt) linked list in which a node's next pointer points
+// to an earlier node, so as to make a loop in the linked list.
+// EXAMPLE
+// Input:	A -> B -> C -> D -> E -> C [the same C as earlier]
+// Output: 	C
+
+// ------------------------------ my implement in C++ --------------------------------
+
+// #1 Using hashtable to mark nodes which are visted.
+// For test this case, I use "list" and "vector" in STL, and return char to replace 
+// node. It doesn't affect this algorithm too much. O(N), T(N)[N = 256]
+
+char loopDetection(const list<char> oriList) {
+	vector<bool> visited(256, false);       // initialize a hashtable
+
+	for (auto ch : oriList) {       // iterate every node
+		if (visited[int(ch)])       // check if it's visited
+			return ch;
+		else
+			visited[int(ch)] = true;  // mark visited nodes
+	}
+
+	return ' ';   // just take ' ' as a test char
+}
+
+// #2 Using a stack to store visited nodes. When pushed into stack, delete it from 
+// the oriList. The top of the stack is the begining of the loop.
+
+char loopDetection(list<char> lst) {
+	stack<char> s;
+
+	for (auto iter = lst.begin(); iter != lst.end(); ++iter)
+		s.push(*iter);
+
+	return s.top();
+}
+
+// --------------------------------- test case -------------------------------------
+
+list1{'a', 'b', 'c', 'd', 'e', 'c'}
+list2{'b', 'c', 'd', 'e', 'b'}
+
+// ------------------------------- original solution in Java ------------------------
+
+// #1 This a totally different method, which is the FastRunner/SlowRunner approach.
+// Fast Runner moves two steps at a time, while Slow Runner moves one step. If the
+// faster meet the slower, the collide point is found. 
+
+LinkedListNode FindBeginning(LinkedListNode head) {
+	LinkedListNode slow = head;
+	LinkedListNode fast = head;
+
+	/* Find meeting point. This will be LOOP_SIZE - k steps into the linked list. */
+	while (fast != null && fast.next !=) {
+		slow = slow.next;
+		fast = fast.next.next;
+		if (slow == fast) {
+			break;
+		}
+	}
+
+	/* Error check - no meeting point, and therefore no loop. */
+	if (fast == null || fast.next == null) {
+		return null;
+	}
+
+	/* Move slow to Head. Keep fast at Meeting Point. Each are k steps from the 
+	   Loop Start. If they move at the same pace, they must meet at Loop Start. */
+	slow = head;
+	while (slow != fast) {
+		slow = slow.next;
+		fast = fast.next;
+	}
+
+	/* Both now point to the start of the loop. */
+	return fast;
+}
