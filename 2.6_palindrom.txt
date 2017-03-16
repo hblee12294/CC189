@@ -1,0 +1,166 @@
+
+// Implement a function to check if a linked list is a palindrome.
+
+// ----------------------------- my implement in C++ --------------------------------
+
+// #1 A convenient way. Create a reversal list, and compare itmes in both lists.
+// It's a space-consume method. O(N), T(N).
+// Notice: I can iterate the whole list to get its size, which could reduce hald of
+// the space, but it's still T(N). So I just skip this process. By the way, I can 
+// accomplish this using Runner technique.
+
+bool checkPalindrom(list<char> oriList) {
+	list<char> revList;
+
+	// reverse process
+	for (auto character : oriList)
+		revList.push_front(character);
+
+	// compare cahracters in two lists
+	for (auto iter1 = oriList.begin(), iter2 = revList.begin(); 
+		 iter1 != oriList.end(); ++iter1, ++iter2)
+		if (*iter1 != *iter2) return false;
+
+	return true;
+}
+
+// #2 The reverse list can be replaced by a stack, push chars into stack then pop 
+// them and compare. Take advantage of the LIFO property of stack.
+
+bool checkPalindrom(list<char> oriList) {
+	stack<char> s;
+	char temp;
+
+	for (auto character : oriList)
+		s.push(character);
+
+	for (auto iter = oriList.begin(); iter != oriList.end(); ++iter) {
+        temp = s.top();
+        s.pop();
+		if (temp != *iter) return false;
+	}
+
+	return true;
+}
+
+// #3 The resursion version in C++, description is below. 讲解见下,这种方法只适用于
+// node操作, 且需要**指针，比较繁琐，不能用iterator。所以先空下。
+
+// -------------------------------- test case --------------------------------------
+
+list1 = {'a', 'b', 'c', 'd', 'd', 'c', 'b', 'a'}
+list2 = {'p', 'o', 'l', 'o', 'p'}
+list3 = {'a', 'b', 'b', 'r', 'a'}
+
+// ------------------------------ original solution in Java ------------------------
+
+// #1 Reverse and compare, just same as mine.
+
+boolean isPalindrom(LinkedListNode head) {
+	LinkedListNode reversed = reverseAndClone(head);
+	return isEqual(head, reversed);
+}
+
+LinkedListNode reverseAndClone(LinkedListNode node) {
+	LinkedListNode head = null;
+	while (node != null) {
+		LinkedListNode n = new LinkedListNode(node.data);
+		n.next = head;
+		head = n;
+		node = node.next;
+	}
+	return head;
+}
+
+boolean isEqual(LinkedListNode one, LinkedListNode two) {
+	while (one != null && two != null) {
+		if (one.data != two.data) {
+			return false;
+		}
+		one = one.next;
+		two = two.next;
+	}
+	return one == null && two == null;
+}
+
+// #2 Iterative Approach. Using a stack, also as I do, and the Runner technique.
+
+boolean isPalindrome(LinkedListNode head) {
+	LinkedListNode fast = head;
+	LinkedListNode slow = head;
+
+	Stack<Integer> stack = new Stack<Integer>();
+
+	/* Push elements from first half of linked list onto stack. When fast runner
+	   (which is moving at 2x speed) reaches the end of the linked list, hen we 
+	   know we're at the middle */
+	while (fast != null && fast.next != null) {
+		stack.push(slow.data);
+		slow = slow.next;
+		fast = fast.next.next;
+	}
+
+	/* Has odd number of elements, so skip the middle element */
+	if (fast != null) {
+		slow = slow.next;
+	}
+
+	while (slow != null) {
+		int top = stack.pop().intValue();
+
+		/* If values are different, then it's not a palindrome */
+		if (top != slow.data) {
+			return false;
+		}
+		slow = slow.next;
+	}
+	return true;
+}
+
+// #3 Recursive Approach. 是个很巧妙的方法，并非通常的两边到中间，而是中间到两边的比较。
+// 先达到中间，计数器length为1或0，对应奇数或者偶数个元素。然后停止递归，开始从中间原路返回
+// 的是为head.next, 继续从中间走的是res。比较绕，多理解一下。 
+
+class Result {
+	public LinkedListNode node;
+	public boolean result;
+}
+
+booolean isPalindrome(LinkedListNode head) {
+	int length = lengthOfList(head);
+	Result p = isPalindromeRecurse(head, length);
+	return p.result;
+}
+
+Result isPalindromeRecurse(LinkedListNode head, int length) {
+	if (head == null || length <= 0) { // Even number of nodes
+		return new Result(head, true);
+	} else if (length == 1) {
+		return new Result(head.next, true);
+	}
+
+	/* Resurse on sublist. */
+	Result res = isPalindromResurse(head.next, length - 2);
+
+	/* If child calls are not a palindrome, pass back up a failure.*/
+	if (!res.result || res.node == null) {
+		return res;
+	}
+
+	/* Check if matches corresponding node on other side. */
+	res.result = (head.data == res.node.data)；
+
+	/* Return corresponding node. */
+	res.node = res.node.next;
+
+	return res;
+}
+
+int lengthOfList(LinkedListNode n) {
+	int size = 0;
+	while (n != null) {
+		size++;
+		n = n.next;
+	}
+	return size;
+}
