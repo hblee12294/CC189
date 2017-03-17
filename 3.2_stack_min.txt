@@ -1,0 +1,100 @@
+
+// How would you design a stack which, in addition to push and pop, has a function min
+// which returns the minimum element? Push, pop and min should all operate in O(1) 
+// time.
+
+// ------------------------------- my implement in C++ ------------------------------
+
+// #1 Create a minStack. When push a item, check if it's smaller than the top of 
+// minStack. If true, push the item into minStack. The same way, pop a item and check
+// if it's the top of minStack. If true, pop minStack. The other functions are omitted.
+
+class NewStack {
+private:
+	stack<int> itemStack;
+	stack<int> minStack;
+public:
+	NewStack() = default;
+	void newPush(const int item) { 
+		itemStack.push(item);
+		if (minStack.empty() || item < minStack.top())
+			minStack.push(item);
+	}
+	void newPop() {
+		if (itemStack.top() == minStack.top())
+			minStack.pop();
+		itemStack.pop();
+	}
+	int min() {
+		if (minStack.empty())
+			return 0;
+		else
+			return minStack.top();
+	}
+};
+
+
+// ---------------------------------- test case -----------------------------------
+
+1, 2, 7, 9, 3, 9
+8, 7, 6, 4, 9, 2 
+
+// ------------------------------ original solution in Java ------------------------
+
+// #1 Append every item a min value
+
+public class StackWithMin extends Stack<nodeWithMin> {
+	public void push(int value) {
+		int newMin = Math.min(value, min());
+		super.push(new NodeWith(value, newMin));
+	}
+
+	public int min() {
+		if (this.isEmpty()) {
+			return Integer.MAX_VALUE;
+		} else {
+			return peek().min;
+		}
+	}
+}
+
+class NodeWithMin {
+	public int value;
+	public int min;
+	public NodeWithMin(int v, int min) {
+		value = v;
+		this.min = min;
+	}
+}
+
+// #2 Using an additional stack, as I do. This is a more space-saving method.
+
+public class StackWithMin2 extends Stack<Integer> {
+	Stack<Integer> s2;
+	public StackWithMin2() {
+		s2 = new Stack<Integer>();
+	}
+
+	public void push(int value) {
+		if (value <= min()) {
+			s2.push(value);
+		}
+		super.push(value);
+	}
+
+	public Integer pop() {
+		int value = super.pop();
+		if (value == min) {
+			s2.pop();
+		}
+		return value;
+	}
+
+	public int min() {
+		if (s2.isEmpty()) {
+			return Integer.MAX_VALUE;
+		} else {
+			return s2.peek();
+		}
+	}
+}
