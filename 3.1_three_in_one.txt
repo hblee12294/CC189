@@ -1,0 +1,96 @@
+
+// Describe how you could use a single array to implement three stacks.
+
+// ------------------------------- my implement in C++ ------------------------------
+
+// The first thought: Implementing two stacks in an array easily, which put items from
+// both start and end. The space will be splited.
+// The second thought: Divide the array into 3 parts, each parts have fixed space.
+// The third thought: Push or pop items alternately, every 3 array items form a block
+// and all the pointers's speed is 3 steps. This algorithm based on 'vector' class.
+// The increment of three stacks(the array) are dynamic, which is twice
+// as much as the last increment before
+
+// To be updated.
+
+// ---------------------------------- test case ------------------------------------
+
+None
+
+// ----------------------------- original solution in Java ------------------------
+
+// Approach 1: Fixed Division
+// Divede the array in three equal parts and allow the individual stack to grow in
+// that limited space.
+
+class FixedMultiStack {
+	private in numberOfStacks = 3;
+	private in stackCapacity;
+	private int[] values;
+	private int[] size;
+
+	public FixedMuliStack(int stackSize) {
+		stackCapacity = stackSize;
+		values = new int[stackSize * numberOfSstacks];
+		sizes = new int[numberOfStacks];
+	}
+
+	/* Push value onto stack. */
+	public void push(int stackNum, int value) throws FullStackException {
+		/* Check that we have space for the next element */
+		if (isFull(stackNum)) {
+			throw new FullStackException();
+		}
+
+		/* Increment stack pointer and then update top value. */
+		sizes[stackNum]++;
+		values[indexOfTop(stackNum)] = value;
+	}
+
+	/* Pop item from top stack. */
+	public int pop(int stackNum) {
+		if (isEmpty(stackNum)) {
+			throw new EmptyStackException();
+		}
+
+		int topIndex = indexOfTop(stackNum);
+		int value = values[topIndex]; // get top
+		values[topIndex] = 0; // Clear
+		sizes[stackNum]--; // Srink
+		return value;
+	}
+
+	/* Return top element. */
+	public int peek(int stackNum) {
+		if (isEmpty(stackNum)) {
+			throw new EmptyStackException();
+		}
+		return values[indexOfTop(stackNum)];
+	}
+
+	/* Return if stack is empty. */
+	public boolean isEmpty(int stackNum) {
+		return sizes[stackNum] == 0;
+	}
+
+	/* Return if stack is full. */
+	public boolean isFull(int stackNum) {
+		return sizes[stackNum] == stackCapacity;
+	}
+
+	/* Return index of the top of the stack. */
+	private int indexOfTop(int stackNum) {
+		int offset = stackNum * stackCapacity;
+		int size = sizes[stackNum];
+		return offset + size -1;
+	}
+}
+
+
+// Approach 2: Flexible Divisions
+// Allow the stack blocks to be flexible in size When one stack exceeds its initial 
+// capacity, we grow the allowable capacity and shift elements as necessary.
+// Also make the array to be circular, such that the final stack may start at the 
+// array and wrap around to the beginning.
+
+// I give up note this method, cause it's sooooooooooooo long. Just refer the book.
