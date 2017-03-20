@@ -1,0 +1,83 @@
+
+// Write a program to sort a stack such that the smallest items are on the top. You
+// can use an additional temporary stack, but you may not copy the elements into any 
+// other data structure(such as an array). The stack supports the following operations
+// : push, pop, peek and isEmpty.
+
+// ---------------------------------- my implement in C++ ---------------------------
+
+// I have no idea how to achieve by this using only an additional stack ...
+// Oh, I do not realized that a temp variable is available.
+// Here's my implement in C++ based on the original solution.
+
+/* The first vesion got something wrong here, and I can't figure it out.
+   So I just put it here for further reviews. 
+
+void sort(stack<int> &oriStack) {
+	stack<int> revStack;
+
+	while (!oriStack.empty()) {
+		if (revStack.empty() || revStack.top() > oriStack.top()) {
+			revStack.push(oriStack.top());
+			oriStack.pop();
+		}
+		else {
+			int temp = oriStack.top();
+			while (revStack.top() > temp) {
+				oriStack.push(revStack.top());
+				revStack.pop();
+			}
+			revStack.push(temp);
+		}
+	}
+
+	while (!revStack.empty()) {
+		oriStack.push(revStack.top());
+		revStack.pop();
+	}
+}
+*/    
+
+// The second version
+
+void sortStack(stack<int> &oriStack) {
+	stack<int> revStack;
+
+	while (!oriStack.empty()) {
+		int temp = oriStack.top();
+		oriStack.pop();
+		while (!revStack.empty() && revStack.top() > temp) {
+			oriStack.push(revStack.top());
+			revStack.pop();
+		}
+		revStack.push(temp);
+	}
+
+	while (!revStack.empty()) {
+		oriStack.push(revStack.top());
+		revStack.pop();
+	}
+}
+
+// ---------------------------------- test case -----------------------------------
+
+None
+
+// ---------------------------------- original solution in Java ---------------------
+
+void sort(Stack<Integer> s) {
+	Stack<Integer> r = new Stack<Integer>();
+	while (!s.isEmpty()) {
+		/* Insert each element in s in sorted order into r. */
+		int temp = s.pop();
+		while (!r.isEmpty() && r.peek() > tmp) {
+			s.push(r.pop());
+		}
+		r.push(r.pop());
+	}
+
+	/* Copyt the elements from r back into s. */
+	while (!r.isEmpty()) {
+		s.push(r.pop());
+	}
+}
