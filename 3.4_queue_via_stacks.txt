@@ -1,0 +1,128 @@
+
+// Implement a MyQueue class which implements a que using two stacks.
+
+// ------------------------------ my implement in C++ -------------------------------
+
+// #1 That would be a high expense method. Here's my idea. Construct two stacks, 
+// addStack and removeStack. If add or remove happens continuously, we use these
+// stacks singly. If add or remove happens alternately, the two stacks should do 
+// reverse transfers before.
+
+class StacksQueue {
+private:
+	stack<T> addStack;        // add operation stack
+	stack<T> removeStack;     // remove operation stack
+public:
+	void add(T item) {
+		// transfer stacks if add stack is empty
+		if (addStack.empty()) {
+			while (!removeStack.empty()) {
+				addStack.push(removeStack.top());
+				removeStack.pop();
+			}
+		}
+		addStack.push(item);  // then, push item into add stack
+	}
+	T remove() {
+		// transfer stacks if remove stack is empty
+		if (removeStack.empty()) {
+			while (!addStack.empty()) {
+				removeStack.push(addStack.top());
+				addStack.pop();
+			}
+		}
+		T temp = removeStack.top();  // buffer remove item
+		removeStack.pop();           // remove the top of remove stack 
+		return temp;                 // return remove item
+	}
+	T peek() {
+		// transfer stacks if add stack is empty
+		if (addStack.empty()) {
+			while (!removeStack.empty()) {
+				addStack.push(removeStack.top());
+				removeStack.pop();
+			}
+		}
+		return addStack.top();       // return the top of add stack
+	}
+
+/* This is my first peek version, totally wrong.
+   the peek action should return its first item. 
+	T peek() {
+		if (!addStack.empty())
+			return addStack.top();
+		else if (!removeStack.empty())
+			return removeStack.top();
+		else 
+			throw empty_stack_error("The stack is empty");
+	}
+*/
+	bool isEmpty() {
+		if (!addStack.empty())
+			return true;
+		else if (!removeStack.empty())
+			return true;
+		else 
+			return false;   // add & remove stack are both empty
+	}
+};
+
+
+// -------------------------------- test case ---------------------------------------
+
+    StacksQueue s;
+    s.add(8);
+    s.add(7);
+    s.add(6);
+    s.add(4);
+    s.add(9);
+    s.add(2);
+
+    cout << s.remove() << endl;
+    cout << s.remove() << endl;
+
+    cout << s.peek() << endl;
+
+// --------------------------------- original solution in Java ----------------------
+
+// Construct a old stack and new stack. I think this method is better. Cause the old
+// stack do not have to shift to new stack. When the remove happens, shifting new 
+// stack to old is enough.
+
+public class MyQueue<T> {
+	Stack<T> stackNewest, stackOldest;
+
+	public MyQueue() {
+		stackNewest = new Stack<T>();
+		stackOldest = new Stack<T>();
+	}
+
+	public int size() {
+		return stackNewest.size() + stackOldest.size();
+	}
+
+	public void add(T value) {
+		/* Push onto stackNewest, which always has the newest elements on top */
+		stackNewest.push(value);
+	}
+
+	?* Move elements from stackNewest into stackOldest. This is usually done so that 
+	   we can do operations on stackOldest. */
+	private void shiftStacks() {
+		if (stackOldest.esEmpty()) {
+			while (!stackNewest.isEmpty()) {
+				stackOldest.push(stackNewestf.pop());
+			}
+		}
+	}
+
+	public T peek() {
+		shiftStacks(); // Ensure stackOldest has the current elements
+		return stackOldest.peek(); // retrieve the oldest item.
+	}
+
+	public T remove() {
+		shiftStacks(); // Ensure stackOldest has the current elements
+		return stackOldest.pop(); // pop the oldest item
+	}
+}
