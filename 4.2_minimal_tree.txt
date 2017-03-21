@@ -1,0 +1,69 @@
+
+// Given a sroted(increasing order) array with unique integer elements, write an 
+// algorithm to create a binary search tree with minimal height.
+
+// -------------------------------- my implement in C++ ----------------------------
+
+// Here is what I thought. The algorithm should satisfies several conditions:
+// 1. binary search tree 2. a complete binary tree 3. append the array as original
+// older. 
+// Thus, the first thing is to decide layer of the BST, which assure min height.
+// Then, build the BST as pre-order, which could build a complete BST
+// This method to be updated.
+
+/* Reference
+   I don't know how to store a pointed node, so the structure will be store children 
+   directly.
+struct Node {
+	int data;
+	Node lChild;
+	Node rChild;
+};
+*/
+
+void buildCBST(const int &arr[]) {
+	
+}
+
+
+// The second method, build a BST that is relatively balance between both side.
+// It is imitated from the original solution.
+
+Node buildMBST(vector<int> arr) {
+	return build(arr, 0, arr.size() - 1);
+}
+
+Node build(vector<int> arr, int start, int end) {
+	if (end < start) {
+		return nullptr;
+	}
+	int mid = (start + end) / 2;
+	Node n = new Node(arr[mid]);
+	n.lChild = build(arr, start, mid - 1);
+	n.rChild = build(arr, mid + 1, end);
+	return n;
+}
+
+
+// -------------------------------- test case ------------------------------------
+
+None
+
+// ---------------------------------- original solution in Java --------------------
+
+// 
+
+TreeNode createMinimalBST(int array[]) {
+	return createMinimalBST(array, 0, array.length - 1);
+}
+
+ThreeNode createMinimalBST(int arr[], int start, int end) {
+	if (end < start) {
+		return null;
+	}
+	int mid = (start + end) / 2;
+	TreeNode n = new TreeNode(arr[mid]);
+	n.left = createMinimalBST(arr, start, mid - 1);
+	n.fright = createMinimalBST(arr, mid + 1, end);
+	return n;
+}
