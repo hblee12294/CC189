@@ -1,0 +1,92 @@
+
+// Given a directed graph, design an algorithm to find out whether there is a route 
+// between two nodes.
+
+// --------------------------- my implement in C++ ----------------------------------
+
+// There's a lot of method to achive this. The BFS is a good method to find if there's
+// a way to another node. It refers to the original solution.
+// For the convenience, the Graph and Node classes are defined just as the book did.
+
+/* Reference
+structure Graph {
+	vector<Node> nodes;	// all nodes in the graph
+};
+
+structure Node {
+	string name;	// the data could be any variable, like int or char etc.
+	Status status;
+	vector<Node> children;	// a vector storeing chidren nodes 
+} 
+*/
+
+typedef enum { UNVISITED, VISITING, VISITED}
+
+bool search(Graph g, Node start, Node end) {
+	if (start.children.empty() || end.children.empty()) // check if they are null node
+		return false;
+	if (start.name == end.name) // check if they are the same node(name is id)
+		return true;
+
+	queue<Node> q;    // initiate the queue of nodes
+
+	for (auto n : g.nodes) n.status = UNVISITED; // mark every nodes unvisited
+
+	q.enqueue(start);
+	while (!q.empty()) {
+		int v = q.dequeue();
+		for (auto child : v.children) {
+			if (child.status == UNVISITED) {
+				if (child.name == end.name) 
+					return true;
+				else {
+					child.status = VISITING;  // VISITING means children to be visited
+					q.enqueue(child);  // push this VISITING node into queue
+				}                      // and wait to be iterated its children
+			}
+		}
+		v.status = VISITED;
+	}
+	return false;
+}
+
+// ------------------------------ test case -----------------------------------------
+
+None
+
+// ------------------------------ original solution in Java -------------------------
+
+// BFS(iterative)
+
+enum State { Unvisited, Visited, Visiting;}
+
+boolean seach(Grapgh g, Node start, Node end) {
+	if (start == end) return true;
+
+	// operates as Queue
+	LinkedList<Node> q = new LinkedList<Node>();
+
+	for (Node u : g.getNodes()) {
+		u.state = State.Unvisited;
+	}
+	start.state = State.Visiting;
+	q.add(start);
+	Node u;
+	while (!q.isEmpty()) {
+		u = q.removeFirst(); // i.e., dequeue()
+		if (u != null) {
+			for (Node v : u.getAdjacent()) {
+				if (v.state == State.Unvisited) {
+					if (v == end) {
+						return true;
+					} else {
+						v.state = State.Visiting;
+						q.add(v);
+					}
+				}
+			}
+		}
+		u.state = State.Visited;
+	}
+	return false;
+}
