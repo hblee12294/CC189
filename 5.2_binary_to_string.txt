@@ -1,0 +1,95 @@
+
+// Given a real number between 0 and 1 (eg. 0.72) that is passed in as a double, 
+// print the binary representation. If the number cannot be represented accurately in
+// binary with at most 32 characters, print "ERROR."
+
+// -------------------------------- my implement in C++ -----------------------------
+
+// I'd like to imitate the calculation process by hand. O(N), N = bits number, at most
+// 32, T(N).
+
+void printDecToBin(double decNum) {
+	queue<int> q;       // a queue to store decimal bits
+	int intNum;         // int part
+	int counter = 0;    // count number of bits
+
+	// if counter < 32, multiply decimal part by 2, and enqueue integer part
+	for (; (counter < 32) && (decNum != 0); ++counter) {
+		intNum = decNum * 2;             // get integer part, 1 or 0
+		decNum = decNum * 2 - intNum;    // get decimal part
+		q.push(intNum);                  // enqueue interger part
+	}
+
+	if (counter == 32)            // when number of bits reach to 32, print error
+		cout << "ERROR!" << endl;
+	else {                        // the print process
+		cout << "0.";
+		while (!q.empty()) {
+			cout << q.front();
+			q.pop();
+		}
+		cout << endl;
+	}
+}
+
+// ---------------------------------- test case -------------------------------------
+
+n1 = 0.72
+n2 = 0.5
+n3 = 0.625
+
+// ------------------------------- original solution in Java ------------------------
+
+// #1 Multiply by 2, same as mine
+
+String printBinary(double num) {
+	if (num >= 1 || num <= 0) {
+		return "ERROR";
+	}
+
+	StringBuilder binary = new StringBuilder();
+	binary.append(".");
+	while (num > 0) {
+		/* Setting a limit on length: 32 characters */
+		if (binary.length() >= 32) {
+			return "ERROR";
+		}
+
+		double r = num * 2;
+		if (r >= 1) {
+			binary.append(1);
+			num = r - 1;
+		} else {
+			binary.append(0);
+			num = r;
+		}
+	}
+	return binary.toString();
+}
+
+// #2 Compare the number to .5 then .25, and so on.
+// It's a brand new method that I meet the first time. 
+
+String printBinary(double num) {
+	if (nu >= 1 || num <= 0) {
+		return "ERROR";
+	}
+
+	StringBuilder binary = new StringBUilder();
+	double frac = 0.5;
+	binary.append(".");
+	while (num > 0) {
+		/* Setting a limit on length: 32 characters */
+		if (binary.length() > 32) {
+			return "ERROR";
+		}
+		if (num >= frac) {
+			binary.append(1);
+			num -= frac;
+		} else {
+			binary.append(0);
+		}
+		frac /= 2;
+	}
+	return binary.toString();
+}
