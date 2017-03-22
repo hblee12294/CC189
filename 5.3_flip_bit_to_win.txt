@@ -1,0 +1,173 @@
+
+// You have an integer and you can flip exactly one bit from a 0 to a 1. Write code to
+// find the length of the longest sequence of 1s you could create.
+// EXAMPLE
+// Input:	1775	(or: 11011101111)
+// Output:	8
+
+// --------------------------------- my implement in C++ -----------------------------
+
+// #1 The first method is the most natural way. Find every 0 in the bitset, replace it
+// with 1, and iterate the bitset count the longest 1s. It takes O(N*N), N is the 
+// length of the bitset. It's simple and easy to understand, but time-consuming.
+
+int longestOneSet(unsigned long num) {
+	bitset<32> bits(num);                       // transfer unsigned long to bitset<32>
+	int max = 0;                                // mark the length of longest sequence
+
+	for (int i = 0; i < bits.size(); ++i) {     // first iteration:find 0 position
+		if (bits[i] == 0) {
+			bits[i] = 1;       // if it's a 0 position, replace it with 1
+
+			int counter = 0;                    // count the length of longest sequence
+			for (int j = 0; j < bits.size(); ++j) {  // iterate new bitset from start
+				if (bits[j] == 1)
+					++counter;                  // if successive 1, counter increase
+				else {
+					if (counter > max) 
+						max = counter;          // check if it's max bitset
+					counter = 0;                // reset counter
+				}
+			}
+
+			bits[i] = 0;                        // reset to 0 which is replaced by 1
+		}
+	}
+	return max;
+}
+
+// Since it's a time-consuming method, I find another method that could iterate the 
+// set once, and use addtional space to calculate the longest bitset.
+// It's O(b) time complexity, and T(m+n), m = 1 sequences, n = 0 sequences, b = bits
+// It's really complex and has a bug on corner case, so just forget it.
+// 没有考虑到最后的记录小于3的情况，还有第一个记录类型为0的情况。这些情况都不存在前一个记录
+// 后一个记录和当前记录相加的情况
+
+struct Counter {         // structure to store bit type and their numbers
+	int type;
+	int number;
+};
+
+int longestOneSet(unsigned long num) {
+	bitset<32> bits(num);
+	vector<Counter> counters;
+	int tempCounter = 0;
+	bool flag = bits[0];  // flag to check the current bit is same as the previous
+
+	// the first iteration, record bit sequences and their number 
+	for (int i = 0; i < bits.size(); ++i) {
+		if (flag == bits[i])        // if the bit is same as the previous one
+			++tempCounter;          // increase temp counter
+		else {                      // if they are not same
+			Counter ct;             // creat a new record
+			ct.type = int(flag);    // record type
+			ct.number = tempCounter;  // record its number
+			counters.push_back(ct);
+			tempCounter = 1;         // reset temp counter
+			flag = !flag;           // flip the flag
+		}
+	}
+
+	// calculate the max length
+	int max = counters[0].number;
+	for (int i = 1; i < counters.size(); ++i) {   // iterate counters
+		if (counters[i].type == 0) {              // if 0, check its previous and next
+			if (counters[i].number == 1 &&
+				counters[i-1].number + counters[i].number + counters[i+1].number > max)
+				max = counters[i-1].number + counters[i].number + counters[i+1].number;
+		}
+		else {                                    // if 1, compare to max directly
+			if (counters[i].number > max)
+				max = counters[i].number;
+		}
+	}
+
+	/* for testing the record status, not the main codes
+	for (auto i : counters)
+        cout << i.type << ":" <<i.number << "|";
+    cout << endl;
+    */
+
+	return max;
+}
+
+// ---------------------------------- test case ------------------------------------
+
+unsigned long n1 = 1775
+unsigned long n2 = 1
+
+// -------------------------------- original solution in Java -----------------------
+
+// #1 Brute force, the same path as my second method
+
+int longestSequence(int n) {
+	if (n == -1) return Integer.BYTES * 8;
+	ArrayList<Integer> sequences = getAlternatingSequences(n);
+	return findLongestSequence(sequences);
+}
+
+/* Return a list of the sizes of the sequence. The sequence starts off with the 
+   number of 0s(which might be 0) and then alternates with the counts of each value
+*/
+ArrayList<Integer> getAlternatingSequence(int n) {
+	ArrayList<Integer> sequences = new ArrayList<Ingerger>();
+
+	int searchingFor = 0;
+	int counter = 0;
+
+	for (int i = 0; i < Integer.BYTE * 8; i++) {
+		if ((n & 1) != searchFor) {
+			sequences.add(counter);
+			searchingFor = n & 1;
+			counter = 0;
+		}
+		counter++;
+		n >>>= 1;
+	}
+	sequences.add(counter);
+
+	return sequences;
+}
+
+/* Given the length of alternating sequences of 0s and 1s, find the longest one we
+   can build. */
+int findLongestSequence(ArrayList<Integer> seq) {
+	int maxSeq = 1;
+
+	for (int i = 0; i < seq.size(); i += 2); {
+		int zeroSeq = seq.get(i);
+		int onesSeqRight = i - 1 >= 0 ? seq.get(i-1) : 0;
+		int oneSeqLeft = i + 1 < seq.size() ? seq.get(i + 1) : 0;
+
+		int thisSeq = 0;
+		if (zeroSeq == 1) {
+			thisSeq = onesSeqLeft + 1 + oneSeqRight;
+		} if (zeroSeq > 1) {
+			thisSeq = 1 + Math.max(onesSeqRight, onesSeqLeft);
+		}
+		maxSeq = Math.max(thisSeq, maxSex);
+	}
+	return maxSeq;
+}
+
+// #2 reduce the space to T(1)
+
+int flipBit(int a) {
+	/* If all 1s, this is already the longest sequence. */
+	if (~a == 0) return Interger.Bytes * 8;
+
+	int currentLength = 0;
+	int previousLength = 0;
+	int maxLength = 1;
+	while (a != 0) {
+		if ((a & 0) == 1) {
+			currentLength++;
+		} else if ((a & 1) == 0) {
+			previousLength = (a & 2) == 0 ? 0 : currentLength;
+			currentLength = 0;
+		}
+		maxLength = Math.max(previousLength + currentLength + 1, maxLength);
+		a >>>= 1;
+	}
+	return maxLength;
+}
