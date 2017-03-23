@@ -1,0 +1,63 @@
+
+// Given a positive integer, print the next smallest and the next largest number that
+// have the same number of 1 bits in their binary representation.
+
+// ---------------------------- my implement in C++ ---------------------------------
+
+// The question is that: what's the length of the integer? E.g. if the i = 1, its 
+// binary rep is 00000000000000000000000000000001, totally 32 bits, so it's next 
+// smallest number is 00000000000000000000000000000010, next largest number is
+// 01000000000000000000000000000000 .
+// By using the bitset class, the problem becomes easier. It takes O(b) time and
+// T(b) space, b = length of the integer.
+
+void nextSmAndLgBin(unsigned long num) {
+    bitset<32> oriNum(num);      // original number
+	bitset<32> nextSm;           // next smallest number
+	bitset<32> nextLg;           // next largest number
+
+	// find the next smallest number,iterate bitset and construct new set
+	for (int i = 0, j = 0; i < oriNum.size(); ++i) {
+		if (oriNum[i] == 1) {
+			nextSm[j] = 1;
+			++j;
+		}
+
+		// if reach the end of bitset,shift the last 1 to next
+		if (i == (oriNum.size() - 1)) {
+			nextSm[j-1] = 0;
+			nextSm[j] = 1;
+		}
+	}
+	cout << nextSm << endl;
+
+	// find the next largest number, the same method, but construct in reverse order
+	for (int i = 0, j = oriNum.size() - 1; i < oriNum.size(); ++i) {
+		if (oriNum[i] == 1) {
+			nextLg[j] = 1;
+			--j;
+		}
+
+		if (i == (oriNum.size() - 1)) {
+			nextLg[j] = 1;
+			nextLg[j+1] = 0;
+		}
+	}
+	cout << nextLg << endl;
+}
+
+// --------------------------------- test case --------------------------------------
+
+unsigned long n1 = 1
+unsigned long n2 = 5
+unsigned long n3 = 14
+
+// -------------------------------- original solution in Java -----------------------
+
+// #1 Brute Force Approach
+// Count the number of 1s, increase(decrease) until you find the same number of 1s
+
+// #2 Bit Manipulation Approach for Get Next Number
+
+// Now, I can't understand the question and solutions here ...
+// To be updated.
