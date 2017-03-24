@@ -1,0 +1,60 @@
+
+// Write a program to swap odd and even bits in an integer with as few instructions as
+// possible (e.g, bit 0 and bit 1 are swapped, bit2 and bit 3 are swapped, and so on).
+
+// --------------------------------- my implement in C++ -----------------------------
+
+// Wait, what does "as few instructions as possible" mean?
+// #1 Just like before, by using bitset from STL, it can be solved easily.
+// O(b), b = length of bits, O(1)
+
+unsigned long swapOddAndEven(unsigned long num) {
+	bitset<32> bits(num);
+
+	for (size_t i = 0; i < bits.size(); i += 2) {
+		int temp = bits[i];
+		bits[i] = bits[i+1];
+		bits[i+1] = temp;
+	}
+
+	return bits.to_ulong(); 
+}
+
+// #2 Bits manipulation. Construct even set and odd set separately, then add them. 
+// O(b), T(b)
+
+unsigned long swapOddAndEven(unsigned long num) {
+
+	// get the odd bits set
+	unsigned long oddSet = num << 1;   // left shift 1 bit to get odd set
+	unsigned long evenMask = 1;
+	while (evenMask != 0) {            // clear even bits with even mask "1...1110"
+		oddSet &= ~evenMask;
+		evenMask <<= 2;                // left shift mask 2 bits
+	}
+
+	// get the even bits set
+	unsigned long evenSet = num >> 1;  // right shift 1 bit to get even set
+	unsigned long oddMask = 2;
+	while (oddMask != 0) {             // clear odd bits with odd mask "1...1101"
+		evenSet &= ~oddMask;
+		oddMask <<= 2;                 // left shift mask 2 bits
+	}
+
+	return (evenSet | oddSet);         // add evenSet and oddSet
+}
+
+// ----------------------------------- test case -------------------------------------
+
+n1 = 1;
+n2 = 10;
+n3 = 53;
+n4 = 256;
+
+// -------------------------------- original solution in Java -----------------------
+
+// It is the same approach as my #2, but conciser, which sets the mask directly.  
+
+int swapOddEvenBits(int x) {
+	return ( ((x & 0xaaaaaaaa) >>> 1) | ((x & 0x55555555) <<< 1) );
+}
