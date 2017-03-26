@@ -1,0 +1,29 @@
+
+// There is an 8x8 chessboard in which two diagonally opposite corners have been cut
+// off. You are given 31 dominos, and a single domino can cover exactly two squares. 
+// Can you use the 31 dominos to cover the entire board? Prove your anwser (by 
+// providing an example or showing why it's impossible).
+
+// ----------------------------------- my solution ----------------------------------
+
+// "Two diagonally opposite corners have been cut off" means 
+// "一条对角线上的两个对角被切掉了"
+// My anwser is No. It's not possible to cover the whole board, since cornners which 
+// are cut off are not adjacent. 
+// It's a little complicated to explain. Because two corners are cutted, the best 
+// situation is that there're two squares left, which are situated diagonally. 
+// Suppose we can fill the chessboard layer by layer from outside. When it comes to
+// the next layer, the situation is similar to the last layer, two diagonal 
+// corners are missing.
+
+// ----------------------------------- original solution -----------------------------
+
+// A clearner explain.
+// The chessboard initially has 32 black and 32 white squares. By removing opposite 
+// corners (which must be the same color), we're left with 30 of one color and 32 of
+// the other color. Let's say, for the sake of argument, that we have 30 black and
+// 32 white squares.
+// Each domino we set on the board will always take up one white and one black square.
+//Therefore, 31 dominos will take up 31 white squares and 31 black squares exactly.
+// On this board, however, we must have 30 black squares and 32 white squares. Hence
+// it is impossible.
