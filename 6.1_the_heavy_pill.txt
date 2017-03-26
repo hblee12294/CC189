@@ -1,0 +1,29 @@
+
+// You have 20 bottles of pills. 19 bottles have 1.0 gram pills, but one has pills of 
+// weight 1.1 gram. Given a scale that provides an exact measurement, how would you
+// find the heavy bottle?
+
+// ----------------------------------- my solution -----------------------------------
+
+// Here's what I thought:
+// It seems like the 'Nine balls problem', but it's not actually, cause it provides
+// exact weight of bottles. Also the description mentions "a exact measurement". So
+// there must ba a quantity relationship bewtween pills.
+
+// ... I totally have no idea.
+
+// --------------------------------- original solution -------------------------------
+
+// I think I mistaken the question. It says "have 1.0 gram pills", which means
+// every pill weights 1.0 grams. But I thought that 1 bottle weights 1.0 grams.
+
+// We can generalize this to the full solution: take one pill from Bottle #1, two
+// pills from Bottle #2, three pills from Bottle #3, and so on. Weight all of these
+// pills. If all pills were one gram each, the scale would read 210 grams(1+2+...+20)
+// Any "overage" must come from the extra 0.1 gram pills.
+// The formula:  (weight - 210 grams) / 0.1 grams
+// We can just calculate the number according to this formula.
+
+// And another thought: The question mentions these are pills, it's seperatable, so 
+// it could be important. Also, confirm that there're enough pills to be taken out.
+ 
