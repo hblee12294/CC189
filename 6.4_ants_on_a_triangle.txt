@@ -1,0 +1,23 @@
+
+// There are three ants on different vertices of a triangle. What is the probability
+// of collision (between any two or all of them) if they start walking on the sides
+// of the triangle? Assume that each ant randomly picks a direction, with either 
+// direction being qually likely to be chosen, and that they walk at the same speed.
+// Similarly, find the probability of collision with n ants on an n-vertex olygon.
+
+// ------------------------------------ my solution --------------------------------
+
+// Well, in this triangle situation, there's only one possibility them can't
+// meet each other, which is that they walk as a circle. Since one edge has two ends,
+// the probability is p = 1 - 1/2 * 1/2 * 1/2 * 2(two directions) = 3/4
+// More generally, the probability of collision on an n-vertex olygon is 
+// p = 1 - 1 / 2^(n-1)
+
+// ------------------------------------- original solution --------------------------
+
+// Same same
+
+// p (clockwise) = 1 / 2^n
+// p (counter) = 1 / 2^n
+// p (same direction) = 2 * (1 / 2^(n-1))
+// p (collision) = 1 - p (same direction) = 1 - 1 / 2^(n-1)
