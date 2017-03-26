@@ -1,0 +1,39 @@
+
+// You have a backetball hoop and someone says that you can play one of two games.
+// Game 1: You get one shot to make the hoop.
+// Game 2: You get three shots and you have to make two of three shots.
+// If p is the probility of making a particular shot, for which values of p should
+// you pick one game or the other?
+
+// ---------------------------------- my solution -----------------------------------
+
+// I suppose this problem can be resolved by mathematical techinique
+// If p is the probability of making a particular shot
+// Game 1 wins: p
+// Game 2 wins: 1 - (1 - p)^3 [if do not miss all 3 shots]
+//            = -p^3 + 3p^2 - 3p - p + 1
+// So, just calculate the p when the probability of game1 equal to game2
+// Although the calculation is complex, but we can derive the anwser from the graph.
+// When p is between 0 ~ 1, it's curves larger than 0, that means the probability of 
+// game 2 is always larger than game 1.
+// So we can tell that choosing game 2 is more likely to win.
+
+// CORRECTION!
+// I miss the situation that only hit 1 shot in Game 2, so the right probability is 
+// 3p^2 - 2^p^3 (GOD! I'm already blunt about high school math)
+
+// --------------------------------- original solution -------------------------------
+
+// Probability of winning Game 1: p
+// Probalibity of winning Game 2:
+// Let s(k. n) be the probality of making exactly k shots our of n. The probability of
+// 	winning G2 is the probability of making exactly two shots out of three or making
+// 	all three shots. In other words:
+// 	P(winning) = s(2, 3) + s(3, 3)
+// 	The probability of making all three shots is:
+// 	s(3, 3) = p^3
+// 	The probalility of making exatly two shots is: 3 (1-p)p^2
+// 	Addding these together, we get: 3p^2 - 2 p^3
+// Which game should you play?
+// PG1: if 0 < p < 0.5, PG2(0.5 < p < 1).
+// If p = 0, 0.5, 1, P(game 1) = P(game 2)
