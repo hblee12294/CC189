@@ -1,0 +1,22 @@
+
+// You have a five-quart jug, a three-quart jug, and an unlimited supply of water (
+// but no measuring cups). How would you come up with exactly four quarts of water?
+// Note that the jugs are oddly shaped, such that filling up exactly "half" of the jug
+// would be impossible.
+
+// ------------------------------------ my solution ----------------------------------
+
+// It's very easy ~
+// 1. Fill the 5-jug, and pour its into 3-jug untill it's full. There're 2q left
+//    in 5-jug.
+// 2. Pour out 3-jug, and pour the water from 5-jug to 3-jug. There're 2q in 3-jug.
+// 3. Fill the 5-jug, then pour the water to 3-jug until it's full. There're 4q in
+//    5-jug, 3q in 3-jug.
+// So, here're exactly four quarts of water.
+
+// ---------------------------------- original solution ------------------------------
+
+// Like what I did.
+// This question, like many questions, has a math/computer science root. If the two 
+// jug sizes are relatively prime, you can measure value between one and the sum of 
+// the jug sizes.
