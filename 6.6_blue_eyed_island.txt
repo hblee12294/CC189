@@ -1,0 +1,37 @@
+
+// A bunch of people are living on an island, when a visitor comes with a strange 
+// order: all blue-eyed people must leave the island as soon as possible. There will
+// be a flight out at 8:00 pm every evening. Each person can see everyone else's eye
+// color, but they do not know their own(nor is anyone allowed to tell them). 
+// Additionally, they do not know how many people have blue eues, although they do
+// know that at least one person does. How many days will it take the blue-eyed people
+// to leave?
+
+// ------------------------------------ my solution ----------------------------------
+
+// I have trouble in understanding this problem ...
+// 题目实在理解不了
+
+// ----------------------------------- original solution -----------------------------
+
+// Assume that there are n people on the island and c of them have blue eyes. We are
+// explicitly told that c > 0.
+
+// Case c = 1: Exactly one person has blue eyes.
+// Since the blue-eyed man knows that everyone else has no blue eyes, he can conclude
+// that it is he who has blue eyes. Therefore, he will leave that night.
+
+// Case c = 2: Exactly two people have blue eyes.
+// From the previous case, that if c = 1, the blue-eyed person would leave on the 
+// first night. Therefore, if the other blue-eyed person is still there, he must
+// deduce that c = 2, which means that he himself has blue eyes. Both men would leave
+// on the second night.
+
+// Case c > 2: The eneral case
+// If c = 3, then those three people will immediately know that there are either 2 or
+// 3 people with blue eyes. If there were two people, then those two people would have
+// left on the second night. So when the others are still around after that night, 
+// each person would conclude that c = 3 and that they, therefore, have blue eyes too.
+
+// We can see the logic continues to apply. If c men have blue eyes, it will take c 
+// nights for the blue-eyed men to leave. All will leave on the same night.
