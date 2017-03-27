@@ -1,0 +1,72 @@
+
+// In the new post-apocalyptic world, the world queen is desperately concerned about
+// the birth rate. Therefore, she decrees that all families should ensure that they
+// have one girl or else they face massive fines. If all families abide by this policy
+// - that is, they have continue to have children untill they have one girl, at which
+// point they immediately stop - what will the gender ratio of the new generation be?
+// (Assume that the odds of someone having a boy or a girl on any given pregnancy is
+// equal.) Solve this our logically and then write a computer simulation of it.
+
+// ------------------------------------ my solution ----------------------------------
+
+// The policy assures that every family has only one girl and unknown number of boys.
+// That reminds me that "one child policy" in China, especially in countryside, where
+// the number of girls surpassses that of boys. So the ratio of girls to boys would 
+// less than 0.5. But I can't get more specific figure.
+
+// Computer simulation would be like this:
+// void oneGirlFamily(families) {
+//     for (family : families in the world) {
+//         do {
+//	           child = giveBirth();
+//         } while (child != girl)
+//      }
+// }
+
+
+// ----------------------------------- original solution -----------------------------
+
+// PS: Actually, if I think throughly, this problem is not that difficult.
+
+// Mathmatically:
+// P (G) = 1/2
+// P (BG) = 1/4
+// P (BBG) = 1/8
+// P (B...G) = ...
+// The probability of have a girl will be the sum of those p. Since it's a geometric
+// series, the sum is (a1*(1-q^n)/(1-q)) which equal to 1-1/2^n. When n -> infinite
+// the result will be closer to 1.
+// Logically:
+// If the earlier sum is 1, this would mean that the gender radio is even. Families
+// contribute exactly one girl and on average one boy. The birth policy is therefore
+// ineffective. That contradicts to our common sense.
+// One way to think about is to imagine that we put all the gender sequence of each 
+// family into one giant string. So if family1 has BG, family2 has BBG, family2 has G,
+// we would write BGBBGG, it's even between B and G.
+
+// Simulation
+// double runNFamilies(int n) {
+	int boys = 0;
+	int girls = 0;
+	for (int i = 0; i < n; i++) {
+		int[] genders = runOneFamily();
+		girls += genders[0];  // [0]是返回女孩数量
+		boys += genders[1];   // [1]是返回男孩数量
+	}
+	return girls / (double) (boys + girls);  // 计算ratio
+}
+
+int[] runOneFamily() {
+	Random random = new Random();
+	int boys = 0;
+	int girls = 0;
+	while (girls == 0) { // untill we have a girl
+		if (rando.nextBoolean()) { // girl
+			girls += 1;
+		} else {
+			boys += 1;
+		}
+	}
+	int[] genders = {girls, boys}; // 一次打包送回girls和boys的数量
+	return genders;
+}
