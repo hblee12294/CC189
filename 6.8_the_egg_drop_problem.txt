@@ -1,0 +1,99 @@
+
+// There is a building of 100 floors. If an egg drops from the Nth floor or above, it
+// will break. If it's dropped from any floor below, it will not break. You're given
+// two eggs. Find N, while minimizing the number of drops for the worst case.
+
+// ---------------------------------- my solution -----------------------------------
+
+// I suppose that the unbroken eggs can be reused.
+
+// #1 method, brutal-force, use 1 egg dropped from 100 to N, the worst case will be 99
+
+// #2 method, drop two eggs skipping one floor. For example:
+//   1 time: drop egg1 from 100, egg2 from 98       // the worst case
+//   2 time: drop egg1 from 97, egg2 from 95        // 4 egg1 -> 33 times
+//   3 time: drop egg1 from 94, egg2 from 92        // 3         
+//   4 time: drop egg1 from 91, egg2 from 89        // 2 egg2 -> if no broke, n=1f
+// 	 So, the worst case is 100/3 + 1 = 34 times.    // 1         if broke, need 1time
+                                                                 to check 4f or 3f
+// #3 method, similarly, if set the gap equal to 2:                     
+//	 1 time: drop egg1 from 100, egg2 from 97
+//	 2 time: drop egg1 from 96, egg2 from 93
+//	 3 time: drop egg1 from 92, egg2 from 89
+//   So, the worst case is 100/4 + 2 = 27 times.
+
+// #3, set the gap equal to 3:
+//	 1 time: drop egg1 from 100, egg2 from 96
+//	 2 time: drop egg1 from 95, egg2 from 91
+//	 3 time: drop egg1 from 90, egg2 from 86
+//   So, the worst case is 100/5 + 3 = 23
+
+// #4, set the gap equal to 4:
+//   the worst case is 100/6 + 4 = 20
+// Like this:    10  -> 16 time unbroke, the need 4 times to check 9,8,7,6
+//               ...
+//               5   -> broke
+//               ...
+//               1
+
+// #5, set the gap equal to 5:
+//   the worst case is 100/7 + 5 = 19
+
+// #6, set the gap equal to 6:
+//   the worst case is 100/8 + 6 = 18
+
+// #7, set the gap equal to 6:
+//   the worst case: 100/9 =  10 left 10, so it should be 10 + 9 = 19
+
+// #8, set the gap 10,:
+//   the worst case: 100/10 + 9 = 19
+
+// According to the deduction above, we should choose #6, the worst case is 18 times.
+
+// ---------------------------------- original solution ------------------------------
+
+// The original solution is difficult than I thought...
+// 1. A perfectly load-balanced system would be one in which Drops(Egg1) + Drops(Egg2)
+// is always the same, regardless of where egg1 breaks.(egg1 is the belower one ere)
+// 2. For that to be the case, since each drop of egg1 takes one more step, egg2 is 
+// allowed one fewer step.
+// 3. We must, therefore, reduce the number of steps potentially required by egg2 by 
+//    one drop each time. For example, if egg1 is fropped on floor 20 and then floor 
+//    30, egg2 is potentially required to take 9 steps. When we drop egg1 again, we 
+//    must reduce potential egg2 steps to only 8. That is, we must drop egg1 at f39
+//    Therefore, egg1 must start at floor x, then go up by x - 1 floors, then x- 2 ..
+//    until 100.
+//    X+(X-1)+(X-2)+...+1=100; X ~= 13.65
+
+// The process here is little confused...
+// Simulation:
+
+int breakPoint = ...;
+int countDrops = 0;
+
+boolean drop(int floor) {
+	countDrops++;
+	return floor >= breakingPoints;
+}
+
+int findBreakingPoint(int floors) {
+	int interval = 14;
+	int previousFloor = 0;
+	int egg1 = interval;
+
+	/* Drop eg1 at decreasing intervals. */
+	while (!drop(egg1) && egg1 <= floors) {
+		interval -= 1;
+		previousFloor = egg1;
+		egg1 += interval;
+	}
+
+	/* Drop egg2 at 1 unit increments. */
+	int egg2 = previousFloor + 1;
+	while (egg2 < egg1 && egg2 <= floors && !drop(egg2)) {
+		egg2 += 1;
+	}
+
+	/* If it didn't break, return -1. */
+	return egg2 > floors ? -1 : egg2;
+}
