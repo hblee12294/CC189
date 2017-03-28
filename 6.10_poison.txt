@@ -1,0 +1,133 @@
+
+// You have 1000 bottles of soda, and exactly one is poisoned. You have 10 test strips
+// which can be used to detect poison. A single drop of poison will turn the test 
+// strip positive permanently. You can put any number of drops on a test strip at once
+// and you can reuse a test strip as many times as you'd like (as long as the results 
+// are negative). However, you can only run tests once per day and it takes seven days
+// to return a result. How would you figure out the poisoned bottle in as few days as
+// possible?
+// FOLLOW UP
+// Write code to simulate your approach.
+
+// ----------------------------------- my solution ----------------------------------
+
+// #1 Normally, we put every test strip into the bottles, the worest case will be 
+// 1000/10*7 = 700 days. God, it's too long.
+
+// #2 The question mentioned that a strp can hold any number of drops. So, may be drop
+// several drops onto the same strip is feasible. 
+// First we devide the bottles into 10 groups.
+// Then we get one drop from bottles in the same group on the same strip.
+// 7days later, we test found the group that is tested positive, then devide that 
+// group into 9 groups, test them simultaneously.
+// Continue until we get the poison one.
+// The process like this:
+// Total bottle           groups         days
+//      1000             100 x 10         7
+//      100           11 x 8 + 12 x 1     7
+//      12             2 x 4 + 1 x 4      7
+//      2                  2 x 2          7
+// So, the worst case is 4*7 = 28 days.
+
+// #3 We notice that we may miss use some strip cause they are not fully utilizd.
+// Some groups can overlap with each other, speed the whole process. But I can't
+// make it specific. And also there's something to do in 7 days to optimize the 
+// process.
+
+// ----------------------------------- original solution -----------------------------
+
+// The native method just like I did.
+
+// Optimized approach(10 days)
+// I can't come up with this method until I die.
+
+//             Day 0->7         Day 1->8         Day 2->9 
+// Strip 0       0xx               x0x              xx0
+// Strip 1       1xx               x1x              xx1
+// Strip 2       2xx               x2x              xx2
+// Strip 3       3xx               x3x              xx3
+// Strip 4       4xx               x4x              xx4
+// Strip 5       5xx               x5x              xx5
+// Strip 6       6xx               x6x              xx6
+// Strip 7       7xx               x7x              xx7
+// Strip 8       8xx               x8x              xx8
+// Strip 9       9xx               x9x              xx9
+
+// For example, if day 7 showed a positive result on strip 4, day 8 showed a positive
+// result on strip 3, and day9 showed a positive result on strip 8, then this would 
+// map to bottle #438. But some errors may happen. For example, if the day 9 do not
+// come the new strip, we can't distingruish the digit1 and digit2, like #388 & #383.
+// So that's new method
+
+//             Day 0->7         Day 1->8         Day 2->9     Day 3->10
+// Strip 0       0xx               x0x              xx0           xx9
+// Strip 1       1xx               x1x              xx1           xx0
+// Strip 2       2xx               x2x              xx2           xx1
+// Strip 3       3xx               x3x              xx3           xx2
+// Strip 4       4xx               x4x              xx4           xx3
+// Strip 5       5xx               x5x              xx5           xx4
+// Strip 6       6xx               x6x              xx6           xx5
+// Strip 7       7xx               x7x              xx7           xx6
+// Strip 8       8xx               x8x              xx8           xx7
+// Strip 9       9xx               x9x              xx9           xx8
+
+// Now, bottle #383 will see (Day7 = #3, Day8 = #8, Day9 = None, Day10 = #4), its383
+// There's still some wrong.
+// Bottle #898 would see (Day7 = #8, Day8 = #9, Day9 = None, Day10 = None.). That's
+// ok. We just need to distinguish bottle #898 from #899. Bottle #899 will see (Day7 // = #8, Day8 = #9, Day 9 = None, Day10 = #0).
+
+// Omit the simulation
+
+// #3 optimal approach(7 days)
+// It's a binary indicator for poisoned or unpoisoned. Is it possible to map 1000
+// keys to 10 binary values such that each key is mapped to a unique configuration of
+// values? Yes, that's what a binary number is.
+// We can take each bottle number and look at its binary representation. If there's a
+// 1 in the ith digit, then we will add a drop of this ottle's conttents to test strip
+// i. Observe that 2^10 is 1024, so 10 test strips will be enough to handle up to 
+// 1024 bottles.
+// We wait seven days, and then read the results. If test strip i is positive, then 
+// set bit i of the result value. Reading all the test strip will give us the ID of 
+// poisoned bottle.
+
+int findPoisonedBottle(ArrayList<Bottle> bottles, ArrayList<TestStrip> strips) {
+	runTests(bottles, strip);
+	ArrayList<Integer> positive = getPositiveOnDay(strips, 7);
+	return setBits(positve);
+}
+
+/* Add bottle contents to test strips */
+void runTests(ArrayList<Bottle> bottles, ArrayList<TestStrip> testStrips) {
+	for (Bottle bottle : bottles) {
+		int id = bottle.getId();
+		int bitIndex = 0;
+		while (id > 0) {
+			if ((id & 1) == 1) {
+				testStrips.get(bitIndex).addDropOnDay(0, bottle);
+			}
+			bitIndex++;
+			id >>= 1;
+		}
+	}
+}
+
+/* Get test strips that are positve on a particular day. */
+ArrayList<Integer> getPositiveOnDay(ArrayList<TestStrip> testStrip, int day) {
+	ArrayList<Ingeter> positive = new ArrayList<Integer>();
+	for (TestStrip testStrip : testStrips) {
+		int id = testStrip.getId();
+		if (testStrip.isPositiveOnDay(day)) {
+			positive.add(id);
+		}
+	}
+	return positive;
+}
+
+/* Create number by setting bits with indices specified in positive. */
+int setBits(ArrayList<Integer> positive) {
+	int id = 0;
+	for (Integer bitIndex : positive) {
+		if |= 1 << bitIndex;
+	}
+	return id;
+}
