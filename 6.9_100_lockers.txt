@@ -1,0 +1,31 @@
+
+// There are 100 closed lockers in a hallway. A man begins by opening all 100 lockers.
+// Next, he closes every second locker.Then, on his third pass, he toggles every third
+// lockers(closes it if it is open or opends it if it is closed). This process 
+// continues for 100 passes, such that on each pass i, the man toggles every i th
+// locker. After his 100th pass in the hallway, in which he toggles only locker #100
+// how many lockers are open?
+
+// ----------------------------------- my solution -----------------------------------
+
+// What decides the status of the lockers? Well, it's the number of toggle actions on
+// each locker. Different lockers suffer different times of toggles. So we just need
+// to make sure that how many times toggles the lockers will be made.
+
+// We can list those several lockers:
+// 1 2  3  4   5  6    7  8    9   10     ...
+// 1 12 13 124 15 1236 17 1248 139 12510  ...
+// O -  -  O   -  -    -  -    O   -      ...
+
+// Notice that the number of factors means how many times the locker will be toggled.
+// If the number is even, the locker will be shut. If it's odd, the locker will be 
+// open. In those examples above, they are 1, 4, 9. All the factors come in pairs like
+// 1-6, 2-3, etc unless the middle of its factors are the same like 9:3, 4:2.
+// Only the power of a number fit the situation showed above, in another word, it must
+// be a perfect squre(完全平方数). 
+// The are 10 perfect squre within 100, so 10 lockers will be open after 100th pass in
+// the hallway.
+
+// ---------------------------------- original solution ------------------------------
+
+// As what I showed above.
